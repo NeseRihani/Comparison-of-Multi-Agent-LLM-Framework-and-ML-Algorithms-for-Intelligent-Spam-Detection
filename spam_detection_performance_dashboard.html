@@ -1,0 +1,238 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+.section { margin-bottom: 2rem; }
+.section-title { font-size: 13px; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.metric-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 1.5rem; }
+.metric-card { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.85rem 1rem; }
+.metric-label { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 4px; }
+.metric-value { font-size: 22px; font-weight: 500; color: var(--color-text-primary); }
+.metric-sub { font-size: 11px; color: var(--color-text-tertiary); margin-top: 2px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; font-weight: 500; font-size: 12px; color: var(--color-text-secondary); padding: 8px 10px; border-bottom: 0.5px solid var(--color-border-tertiary); }
+td { padding: 7px 10px; border-bottom: 0.5px solid var(--color-border-tertiary); color: var(--color-text-primary); }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--color-background-secondary); }
+.best { font-weight: 500; color: var(--color-text-success); }
+.agent-bar-wrap { display: flex; align-items: center; gap: 8px; }
+.agent-bar { height: 8px; border-radius: 4px; flex-shrink: 0; }
+.tab-row { display: flex; gap: 8px; margin-bottom: 1rem; }
+.tab { font-size: 12px; padding: 5px 12px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-tertiary); cursor: pointer; background: transparent; color: var(--color-text-secondary); }
+.tab.active { background: var(--color-background-secondary); color: var(--color-text-primary); font-weight: 500; border-color: var(--color-border-secondary); }
+.panel { display: none; }
+.panel.active { display: block; }
+.badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 500; }
+.badge-green { background: var(--color-background-success); color: var(--color-text-success); }
+.badge-blue  { background: var(--color-background-info);    color: var(--color-text-info); }
+.chart-wrap { position: relative; width: 100%; }
+</style>
+
+<div style="padding: 1rem 0;">
+
+<div class="section">
+  <div class="metric-grid">
+    <div class="metric-card">
+      <div class="metric-label">LLM Accuracy</div>
+      <div class="metric-value">95.3%</div>
+      <div class="metric-sub">3.915 email · zero-shot</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">LLM F1 Score</div>
+      <div class="metric-value">95.7%</div>
+      <div class="metric-sub">Pre: 96.9% · Rec: 94.6%</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">En iyi ML (SGD)</div>
+      <div class="metric-value">99.0%</div>
+      <div class="metric-sub">F1 · n=1000 eğitimle</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Toplam hata (LLM)</div>
+      <div class="metric-value">185</div>
+      <div class="metric-sub">FN: 119 · FP: 66</div>
+    </div>
+  </div>
+</div>
+
+<div class="tab-row">
+  <button class="tab active" onclick="showTab('ml')">ML artırımsal</button>
+  <button class="tab" onclick="showTab('llm')">LLM artırımsal</button>
+  <button class="tab" onclick="showTab('agent')">Agent bazlı analiz</button>
+  <button class="tab" onclick="showTab('compare')">Genel karşılaştırma</button>
+</div>
+
+<div id="tab-ml" class="panel active">
+  <div class="section-title">ML modelleri — artırımsal eğitim sonuçları (F1 skoru)</div>
+  <div class="chart-wrap" style="height: 300px;"><canvas id="mlChart"></canvas></div>
+  <div style="margin-top: 1rem;">
+  <table>
+    <thead><tr><th>Model</th><th>n=100</th><th>n=200</th><th>n=500</th><th>n=1000</th><th>n=3915</th></tr></thead>
+    <tbody>
+      <tr><td>Naive Bayes</td><td>88.9</td><td>94.7</td><td>90.1</td><td>95.3</td><td>96.0</td></tr>
+      <tr><td>Logistic Regression</td><td>95.2</td><td>85.0</td><td>95.0</td><td class="best">98.5</td><td>98.2</td></tr>
+      <tr><td>SGD Classifier</td><td>95.2</td><td>92.3</td><td class="best">99.0</td><td class="best">99.0</td><td class="best">98.5</td></tr>
+      <tr><td>Random Forest</td><td>90.0</td><td>90.5</td><td>95.9</td><td>96.1</td><td>97.4</td></tr>
+      <tr><td>XGBoost</td><td>90.9</td><td>90.5</td><td>93.3</td><td>94.6</td><td>96.8</td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<div id="tab-llm" class="panel">
+  <div class="section-title">LLM (Multi-Agent) — artırımsal performans</div>
+  <div class="chart-wrap" style="height: 260px;"><canvas id="llmChart"></canvas></div>
+  <div style="margin-top: 1rem;">
+  <table>
+    <thead><tr><th>Veri boyutu</th><th>Spam</th><th>Ham</th><th>Accuracy</th><th>Precision</th><th>Recall</th><th>F1</th></tr></thead>
+    <tbody>
+      <tr><td>100</td><td>54</td><td>46</td><td>94.0%</td><td>94.4%</td><td>94.4%</td><td>94.4%</td></tr>
+      <tr><td>200</td><td>109</td><td>91</td><td>95.0%</td><td>95.4%</td><td>95.4%</td><td>95.4%</td></tr>
+      <tr><td>500</td><td>280</td><td>220</td><td>96.0%</td><td>97.5%</td><td>95.4%</td><td>96.4%</td></tr>
+      <tr><td>1000</td><td>568</td><td>432</td><td>96.0%</td><td>97.1%</td><td>95.8%</td><td>96.5%</td></tr>
+      <tr><td>3915</td><td>2184</td><td>1731</td><td>95.3%</td><td>96.9%</td><td>94.5%</td><td class="best">95.7%</td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<div id="tab-agent" class="panel">
+  <div class="section-title">Agent bazlı F1 — neden multi-agent daha iyi? (n=3915)</div>
+  <div class="chart-wrap" style="height: 260px;"><canvas id="agentChart"></canvas></div>
+  <div style="margin-top: 1rem;">
+  <table>
+    <thead><tr><th>Agent</th><th>Accuracy</th><th>Precision</th><th>Recall</th><th>F1</th><th>TP</th><th>FP</th><th>FN</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Content Agent</td><td>87.4%</td><td>98.4%</td><td>78.7%</td><td>87.4%</td><td>1718</td><td>28</td><td>466</td>
+      </tr>
+      <tr>
+        <td>Sender Agent</td><td>84.7%</td><td>94.8%</td><td>76.7%</td><td>84.8%</td><td>1676</td><td>92</td><td>508</td>
+      </tr>
+      <tr>
+        <td>URL Agent</td><td>71.6%</td><td>90.9%</td><td>54.6%</td><td>68.2%</td><td>1193</td><td>120</td><td>991</td>
+      </tr>
+      <tr style="background: var(--color-background-secondary);">
+        <td><strong>Multi-Agent</strong> <span class="badge badge-green">kombine</span></td>
+        <td class="best">95.3%</td><td class="best">96.9%</td><td class="best">94.5%</td><td class="best">95.7%</td>
+        <td>2065</td><td>66</td><td>119</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <div style="margin-top: 1rem; font-size: 12px; color: var(--color-text-secondary); background: var(--color-background-secondary); padding: 0.75rem 1rem; border-radius: var(--border-radius-md);">
+    Tek agent F1 ortalaması: %80.1 → Multi-agent: %95.7 · <strong>+15.6 puan artış</strong>
+  </div>
+</div>
+
+<div id="tab-compare" class="panel">
+  <div class="section-title">ML vs LLM — n=3915 karşılaştırması</div>
+  <div class="chart-wrap" style="height: 280px;"><canvas id="compareChart"></canvas></div>
+  <div style="margin-top: 1rem;">
+  <table>
+    <thead><tr><th>Model</th><th>Tür</th><th>Eğitim gerekli</th><th>Accuracy</th><th>F1</th></tr></thead>
+    <tbody>
+      <tr><td>Naive Bayes</td><td>ML</td><td><span class="badge badge-blue">Evet</span></td><td>96.2%</td><td>96.0%</td></tr>
+      <tr><td>Logistic Regression</td><td>ML</td><td><span class="badge badge-blue">Evet</span></td><td>98.2%</td><td>98.2%</td></tr>
+      <tr><td>SGD Classifier</td><td>ML</td><td><span class="badge badge-blue">Evet</span></td><td class="best">98.5%</td><td class="best">98.5%</td></tr>
+      <tr><td>Random Forest</td><td>ML</td><td><span class="badge badge-blue">Evet</span></td><td>97.5%</td><td>97.4%</td></tr>
+      <tr><td>XGBoost</td><td>ML</td><td><span class="badge badge-blue">Evet</span></td><td>96.8%</td><td>96.8%</td></tr>
+      <tr style="background: var(--color-background-secondary);">
+        <td><strong>Multi-Agent LLM</strong></td><td>LLM</td>
+        <td><span class="badge badge-green">Hayır (zero-shot)</span></td>
+        <td>95.3%</td><td>95.7%</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <div style="margin-top: 1rem; font-size: 12px; color: var(--color-text-secondary); background: var(--color-background-secondary); padding: 0.75rem 1rem; border-radius: var(--border-radius-md);">
+    LLM, eğitim verisi olmadan ML modellerine yakın performans gösteriyor. SGD ile aradaki fark yalnızca 2.8 puan F1.
+  </div>
+</div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+function showTab(id) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelector('[onclick="showTab(\''+id+'\')"]').classList.add('active');
+  document.getElementById('tab-'+id).classList.add('active');
+  if (id === 'ml' && !window.mlDone) { drawML(); window.mlDone = true; }
+  if (id === 'llm' && !window.llmDone) { drawLLM(); window.llmDone = true; }
+  if (id === 'agent' && !window.agentDone) { drawAgent(); window.agentDone = true; }
+  if (id === 'compare' && !window.compareDone) { drawCompare(); window.compareDone = true; }
+}
+
+const SIZES = ['100','200','500','1000','3915'];
+const COLORS = ['#378ADD','#1D9E75','#D85A30','#D4537E','#7F77DD'];
+
+function drawML() {
+  const datasets = [
+    { label:'Naive Bayes',         data:[88.9,94.7,90.1,95.3,96.0], borderColor:COLORS[0], tension:.3 },
+    { label:'Logistic Regression', data:[95.2,85.0,95.0,98.5,98.2], borderColor:COLORS[1], tension:.3 },
+    { label:'SGD Classifier',      data:[95.2,92.3,99.0,99.0,98.5], borderColor:COLORS[2], tension:.3 },
+    { label:'Random Forest',       data:[90.0,90.5,95.9,96.1,97.4], borderColor:COLORS[3], tension:.3 },
+    { label:'XGBoost',             data:[90.9,90.5,93.3,94.6,96.8], borderColor:COLORS[4], tension:.3 },
+  ].map(d => ({...d, fill:false, pointRadius:4, borderWidth:2, backgroundColor:d.borderColor+'33'}));
+  new Chart(document.getElementById('mlChart'), {
+    type:'line', data:{ labels:SIZES, datasets },
+    options:{ responsive:true, maintainAspectRatio:false,
+      scales:{ y:{ min:80, max:100, ticks:{ callback:v=>v+'%' }, grid:{ color:'rgba(128,128,128,.1)' } }, x:{ grid:{ color:'rgba(128,128,128,.1)' } } },
+      plugins:{ legend:{ position:'bottom', labels:{ boxWidth:10, boxHeight:10, padding:12, font:{ size:11 } } } }
+    }
+  });
+}
+
+function drawLLM() {
+  new Chart(document.getElementById('llmChart'), {
+    type:'line',
+    data:{ labels:['100','200','500','1000','3915'], datasets:[
+      { label:'F1', data:[94.4,95.4,96.4,96.5,95.7], borderColor:'#1D9E75', fill:true, backgroundColor:'#1D9E7522', tension:.3, pointRadius:5, borderWidth:2 },
+      { label:'Precision', data:[94.4,95.4,97.5,97.1,96.9], borderColor:'#378ADD', fill:false, tension:.3, pointRadius:4, borderWidth:1.5, borderDash:[4,3] },
+      { label:'Recall',    data:[94.4,95.4,95.4,95.8,94.5], borderColor:'#D85A30', fill:false, tension:.3, pointRadius:4, borderWidth:1.5, borderDash:[4,3] },
+    ]},
+    options:{ responsive:true, maintainAspectRatio:false,
+      scales:{ y:{ min:88, max:100, ticks:{ callback:v=>v+'%' }, grid:{ color:'rgba(128,128,128,.1)' } }, x:{ grid:{ color:'rgba(128,128,128,.1)' } } },
+      plugins:{ legend:{ position:'bottom', labels:{ boxWidth:10, boxHeight:10, padding:12, font:{ size:11 } } } }
+    }
+  });
+}
+
+function drawAgent() {
+  new Chart(document.getElementById('agentChart'), {
+    type:'bar',
+    data:{ labels:['Content Agent','Sender Agent','URL Agent','Multi-Agent'],
+      datasets:[
+        { label:'F1',        data:[87.4,84.8,68.2,95.7], backgroundColor:['#378ADD88','#1D9E7588','#D85A3088','#1D9E75'], borderRadius:4 },
+        { label:'Recall',    data:[78.7,76.7,54.6,94.5], backgroundColor:['#378ADD44','#1D9E7544','#D85A3044','#1D9E7544'], borderRadius:4 },
+      ]
+    },
+    options:{ responsive:true, maintainAspectRatio:false,
+      scales:{ y:{ min:40, max:100, ticks:{ callback:v=>v+'%' }, grid:{ color:'rgba(128,128,128,.1)' } }, x:{ grid:{ display:false } } },
+      plugins:{ legend:{ position:'bottom', labels:{ boxWidth:10, boxHeight:10, padding:12, font:{ size:11 } } } }
+    }
+  });
+}
+
+function drawCompare() {
+  new Chart(document.getElementById('compareChart'), {
+    type:'bar',
+    data:{
+      labels:['Naive Bayes','Logistic Reg.','SGD Classifier','Random Forest','XGBoost','Multi-Agent LLM'],
+      datasets:[
+        { label:'F1', data:[96.0,98.2,98.5,97.4,96.8,95.7],
+          backgroundColor:['#378ADD88','#378ADD88','#378ADD88','#378ADD88','#378ADD88','#1D9E75'],
+          borderRadius:4 }
+      ]
+    },
+    options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      scales:{ x:{ min:90, max:100, ticks:{ callback:v=>v+'%' }, grid:{ color:'rgba(128,128,128,.1)' } }, y:{ grid:{ display:false } } },
+      plugins:{ legend:{ display:false } }
+    }
+  });
+}
+
+drawML();
+</script>
