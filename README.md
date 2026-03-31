@@ -128,7 +128,7 @@ The `urls` field is a binary feature: `1` = body contains at least one URL, `0` 
 
 ---
 # Spam Detection Performance Dashboard
-[![Live Demo](https://img.shields.io/badge/Demo-Interactive_Dashboard-success?style=for-the-badge&logo=github)](https://neserihani.github.io/Comparison-of-Multi-Agent-LLM-Framework-and-ML-Algorithms-for-Intelligent-Spam-Detection/)
+[![Live Demo](https://img.shields.io/badge/Demo-Interactive_Dashboard-success?style=for-the-badge&logo=github)](https://neserihani.github.io/Comparison-of-Multi-Agent-LLM-Framework-and-ML-Algorithms-for-Intelligent-Spam-Detection/index.html)
 
 ---
 ## ⚙️ Setup
