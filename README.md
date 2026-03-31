@@ -127,7 +127,10 @@ The `urls` field is a binary feature: `1` = body contains at least one URL, `0` 
 ```
 
 ---
+# Spam Detection Performance Dashboard
+[![Live Demo](https://img.shields.io/badge/Demo-Interactive_Dashboard-success?style=for-the-badge&logo=github)](https://neserihani.github.io/Comparison-of-Multi-Agent-LLM-Framework-and-ML-Algorithms-for-Intelligent-Spam-Detection/)
 
+---
 ## ⚙️ Setup
 
 ### Requirements
@@ -191,7 +194,6 @@ python parse_agent_report.py
 Parses the detailed log file and extracts each agent's individual decisions. Validates for duplicate or missing email IDs, then produces `agent_votes.csv` and `agent_analysis.csv`.
 
 ---
-
 ## 💡 Key Design Decisions
 
 - **🎚️ Adaptive threshold** — The URL Agent is inactive for emails with no hyperlinks. Rather than always requiring 2/3 votes, the threshold drops to 1/2 when the URL Agent cannot contribute. This prevents URL-free spam from being systematically missed.
