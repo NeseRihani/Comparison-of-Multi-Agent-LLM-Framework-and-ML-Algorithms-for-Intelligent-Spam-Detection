@@ -118,18 +118,12 @@ The `urls` field is a binary feature: `1` = body contains at least one URL, `0` 
 
 ```
 ├── prepare_and_clean_ceas.py    # Data cleaning and URL feature extraction
-├── spam_detection.py            # Main multi-agent detection system
+├── spam_detection_ceas.py            # Main multi-agent detection system
 ├── ml_comparison.py             # Traditional ML baseline experiments
 ├── llm_analysis.py              # LLM results analysis and incremental breakdown
 ├── parse_agent_report.py        # Per-agent vote extraction from report logs
-├── cleaned_ceas.csv             # Preprocessed dataset (after running prepare script)
-├── sample_checkpoint.csv        # Fixed evaluation sample (seed=42)
-├── results_checkpoint.csv       # Agent verdicts saved incrementally
-├── analysis_report_ceas_groq.txt  # Detailed per-email agent decision log
-├── analysis_results_ceas_groq.csv # Final results CSV
-├── ml_results.csv               # ML model performance across data sizes
-├── agent_votes.csv              # Per-agent binary votes (parsed from log)
-└── agent_analysis.csv           # Incremental per-agent metrics
+├── llm_report_analysis.txt      # LLM results report
+├── ml_report                    # ML results report
 ```
 
 ---
@@ -151,9 +145,6 @@ GROQ_API_KEY=your_groq_api_key_here
 # You can add more keys for faster processing (round-robin rotation)
 GROQ_API_KEY_2=your_second_key_here
 ```
-
-> ⚠️ Never hardcode API keys directly in `.py` files. Always use a `.env` file and make sure it is listed in `.gitignore`.
-
 ---
 
 ## 🚀 Usage
@@ -169,16 +160,11 @@ Cleans CEAS-08, removes duplicates, fills missing fields, and extracts URL strin
 ### Step 2 — Run the multi-agent system
 
 ```bash
-python spam_detection.py
+python spam_detection_ceas.py
 ```
 
 Analyzes emails using three LLM agents. Saves progress to `results_checkpoint.csv` after every email — if interrupted, it resumes automatically from where it left off.
 
-To restart from scratch:
-
-```python
-RESET_CHECKPOINT = True  # in spam_detection.py
-```
 
 ### Step 3 — Analyze LLM results
 
@@ -218,24 +204,5 @@ Parses the detailed log file and extracts each agent's individual decisions. Val
 
 ---
 
-## ⚠️ Limitations
 
-- **Rate limits** — The Groq free tier limits throughput. Processing 3,915 emails required multiple sessions across different days.
-- **URL-free spam** — The URL Agent cannot contribute for emails without hyperlinks (~33% of the dataset). The adaptive threshold partially compensates, but these cases have higher false-negative rates.
-- **Prompt sensitivity** — Agent decisions depend on prompt wording. No systematic prompt optimization was performed.
 
----
-
-## 🎓 Academic Context
-
-This project was developed as part of a conference paper submission. The multi-agent architecture and results are described in:
-
-> **A Multi-Agent LLM Framework for Intelligent Email Spam Detection**
-
-Dataset reference: Champa, A.I., Rabbi, M.F., and Zibran, M.F. — *Curated Datasets and Feature Analysis for Phishing Email Detection with Machine Learning*, IEEE ICMI 2024.
-
----
-
-## 📄 License
-
-**MIT License** — free to use, modify, and distribute with attribution.
