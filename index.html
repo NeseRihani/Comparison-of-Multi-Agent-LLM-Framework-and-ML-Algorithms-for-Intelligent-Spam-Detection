@@ -43,12 +43,12 @@ tr:hover td { background: var(--color-background-secondary); }
       <div class="metric-sub">Pre: 96.9% · Rec: 94.6%</div>
     </div>
     <div class="metric-card">
-      <div class="metric-label">En iyi ML (SGD)</div>
+      <div class="metric-label">Best ML (SGD)</div>
       <div class="metric-value">99.0%</div>
-      <div class="metric-sub">F1 · n=1000 eğitimle</div>
+      <div class="metric-sub">F1 · n=1000 trainings</div>
     </div>
     <div class="metric-card">
-      <div class="metric-label">Toplam hata (LLM)</div>
+      <div class="metric-label">Total Error (LLM)</div>
       <div class="metric-value">185</div>
       <div class="metric-sub">FN: 119 · FP: 66</div>
     </div>
@@ -56,14 +56,14 @@ tr:hover td { background: var(--color-background-secondary); }
 </div>
 
 <div class="tab-row">
-  <button class="tab active" onclick="showTab('ml')">ML artırımsal</button>
-  <button class="tab" onclick="showTab('llm')">LLM artırımsal</button>
-  <button class="tab" onclick="showTab('agent')">Agent bazlı analiz</button>
-  <button class="tab" onclick="showTab('compare')">Genel karşılaştırma</button>
+  <button class="tab active" onclick="showTab('ml')">ML incremental</button>
+  <button class="tab" onclick="showTab('llm')">LLM incremental</button>
+  <button class="tab" onclick="showTab('agent')">Agent based analysis</button>
+  <button class="tab" onclick="showTab('compare')">General comparison</button>
 </div>
 
 <div id="tab-ml" class="panel active">
-  <div class="section-title">ML modelleri — artırımsal eğitim sonuçları (F1 skoru)</div>
+  <div class="section-title">ML models — incremental train results (F1 score)</div>
   <div class="chart-wrap" style="height: 300px;"><canvas id="mlChart"></canvas></div>
   <div style="margin-top: 1rem;">
   <table>
@@ -80,11 +80,11 @@ tr:hover td { background: var(--color-background-secondary); }
 </div>
 
 <div id="tab-llm" class="panel">
-  <div class="section-title">LLM (Multi-Agent) — artırımsal performans</div>
+  <div class="section-title">LLM (Multi-Agent) — incremental performance</div>
   <div class="chart-wrap" style="height: 260px;"><canvas id="llmChart"></canvas></div>
   <div style="margin-top: 1rem;">
   <table>
-    <thead><tr><th>Veri boyutu</th><th>Spam</th><th>Ham</th><th>Accuracy</th><th>Precision</th><th>Recall</th><th>F1</th></tr></thead>
+    <thead><tr><th>Data Size</th><th>Spam</th><th>Ham</th><th>Accuracy</th><th>Precision</th><th>Recall</th><th>F1</th></tr></thead>
     <tbody>
       <tr><td>100</td><td>54</td><td>46</td><td>94.0%</td><td>94.4%</td><td>94.4%</td><td>94.4%</td></tr>
       <tr><td>200</td><td>109</td><td>91</td><td>95.0%</td><td>95.4%</td><td>95.4%</td><td>95.4%</td></tr>
@@ -97,7 +97,7 @@ tr:hover td { background: var(--color-background-secondary); }
 </div>
 
 <div id="tab-agent" class="panel">
-  <div class="section-title">Agent bazlı F1 — neden multi-agent daha iyi? (n=3915)</div>
+  <div class="section-title">Agent-based F1 — why is multi-agent better? (n=3915)</div>
   <div class="chart-wrap" style="height: 260px;"><canvas id="agentChart"></canvas></div>
   <div style="margin-top: 1rem;">
   <table>
@@ -121,32 +121,32 @@ tr:hover td { background: var(--color-background-secondary); }
   </table>
   </div>
   <div style="margin-top: 1rem; font-size: 12px; color: var(--color-text-secondary); background: var(--color-background-secondary); padding: 0.75rem 1rem; border-radius: var(--border-radius-md);">
-    Tek agent F1 ortalaması: %80.1 → Multi-agent: %95.7 · <strong>+15.6 puan artış</strong>
+    Single-agent F1 average: 80.1% → Multi-agent: 95.7% <strong>+15.6 point increase</strong>
   </div>
 </div>
 
 <div id="tab-compare" class="panel">
-  <div class="section-title">ML vs LLM — n=3915 karşılaştırması</div>
+  <div class="section-title">ML vs LLM — n=3915 Comparison</div>
   <div class="chart-wrap" style="height: 280px;"><canvas id="compareChart"></canvas></div>
   <div style="margin-top: 1rem;">
   <table>
-    <thead><tr><th>Model</th><th>Tür</th><th>Eğitim gerekli</th><th>Accuracy</th><th>F1</th></tr></thead>
+    <thead><tr><th>Model</th><th>Tür</th><th>Train</th><th>Accuracy</th><th>F1</th></tr></thead>
     <tbody>
-      <tr><td>Naive Bayes</td><td>ML</td><td><span class="badge badge-blue">Evet</span></td><td>96.2%</td><td>96.0%</td></tr>
-      <tr><td>Logistic Regression</td><td>ML</td><td><span class="badge badge-blue">Evet</span></td><td>98.2%</td><td>98.2%</td></tr>
-      <tr><td>SGD Classifier</td><td>ML</td><td><span class="badge badge-blue">Evet</span></td><td class="best">98.5%</td><td class="best">98.5%</td></tr>
-      <tr><td>Random Forest</td><td>ML</td><td><span class="badge badge-blue">Evet</span></td><td>97.5%</td><td>97.4%</td></tr>
-      <tr><td>XGBoost</td><td>ML</td><td><span class="badge badge-blue">Evet</span></td><td>96.8%</td><td>96.8%</td></tr>
+      <tr><td>Naive Bayes</td><td>ML</td><td><span class="badge badge-blue">Yes</span></td><td>96.2%</td><td>96.0%</td></tr>
+      <tr><td>Logistic Regression</td><td>ML</td><td><span class="badge badge-blue">Yes</span></td><td>98.2%</td><td>98.2%</td></tr>
+      <tr><td>SGD Classifier</td><td>ML</td><td><span class="badge badge-blue">Yes</span></td><td class="best">98.5%</td><td class="best">98.5%</td></tr>
+      <tr><td>Random Forest</td><td>ML</td><td><span class="badge badge-blue">Yes</span></td><td>97.5%</td><td>97.4%</td></tr>
+      <tr><td>XGBoost</td><td>ML</td><td><span class="badge badge-blue">Yes</span></td><td>96.8%</td><td>96.8%</td></tr>
       <tr style="background: var(--color-background-secondary);">
         <td><strong>Multi-Agent LLM</strong></td><td>LLM</td>
-        <td><span class="badge badge-green">Hayır (zero-shot)</span></td>
+        <td><span class="badge badge-green">No (zero-shot)</span></td>
         <td>95.3%</td><td>95.7%</td>
       </tr>
     </tbody>
   </table>
   </div>
   <div style="margin-top: 1rem; font-size: 12px; color: var(--color-text-secondary); background: var(--color-background-secondary); padding: 0.75rem 1rem; border-radius: var(--border-radius-md);">
-    LLM, eğitim verisi olmadan ML modellerine yakın performans gösteriyor. SGD ile aradaki fark yalnızca 2.8 puan F1.
+    LLM performs similarly to ML models without training data. The difference with SGD is only 2.8 points F1.
   </div>
 </div>
 
